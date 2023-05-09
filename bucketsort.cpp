@@ -1,48 +1,41 @@
 #include<iostream>
+#include <algorithm>
+#include <vector>
 using namespace std;
 
-void bucketsort(int a[],int n)
-{
-	int max=a[0];
+void bucketSort(float arr[], int n){
+	vector<float> b[n];
 
-	for(int i=0;i<n;i++)
-	{
-		if(a[i]>max)
-			max=a[i];
+	//Put array elements in different buckets
+	for (int i=0;i<n;i++) {
+		int bi=n*arr[i];
+		b[bi].push_back(arr[i]);
 	}
 
-	int bucket[max];
+	//Sort individual buckets
+	for (int i=0;i<n;i++)
+		sort(b[i].begin(),b[i].end());
 
-	for(int i=0;i<=max;i++)
-		bucket[i]=0;
-
-	for(int i=0;i<n;i++)
-		bucket[a[i]]++;
-
-	for(int i=0,j=0;i<=max;i++)
-	{
-		while(bucket[i]>0)
-		{
-			a[j++]=i;
-			bucket[i]--;
-		}
-
-	}
+	//Concatenate all buckets into arr[]
+	int index = 0;
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < b[i].size(); j++)
+			arr[index++] = b[i][j];
 }
 
-void print(int a[],int n)
-{
-	for(int i=0;i<n;i++)
-		cout<<a[i]<<" ";
-	cout<<endl;
-}
 
-int main()
-{
-	int n=5;
-	int a[]={4,6,1,8,3};
-	print(a,n);
-	bucketsort(a,n);
-	print(a,n);
-
+int main(){
+	int n;
+	cout << "enter  no. of element :";
+    cin >> n;
+    float arr[n];
+    cout << "enter elements...";
+    for(int i=0;i<n;i++){
+        cin >> arr[i];
+    }
+    bucketSort(arr, n);  
+    cout<<"\nArray after Bucket sort :";  
+    for(int i=0;i<n;i++){
+        cout << arr[i] << " ";
+    }
 }
