@@ -1,107 +1,57 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
-class Qnode{
-    public:
-    int info;
-    Qnode *next;
-    Qnode(){
-        next=0;
-    }
-    Qnode(int x,Qnode *n=0){
-        info=x;
-        next=n;
-    }
+
+class Graph {
+	private:
+		int V;
+		vector<list<int> > adj;
+	public:
+		Graph(int V);
+		void addEdge(int v, int w);
+		void BFS(int s);
 };
-class Queue{
-    Qnode *front,*rear;
-    public:
-    Queue(){
-        front=rear=0;
-    }
-    int isempty();
-    void enqueue(int);
-    int dequeue();
-};
-int Queue :: isempty(){
-    if(front==0)
-    return 1;
-    else
-    return 0;
+Graph::Graph(int V){
+	this->V = V;
+	adj.resize(V);
 }
-void Queue :: enqueue(int a){
-    Qnode *p=new Qnode(a);
-    if(isempty()){
-        front=rear=p;
-    }
-    else{
-        rear->next=p;
-        rear=p;
-    }
+
+void Graph::addEdge(int v, int w){
+	adj[v].push_back(w);
 }
-int Queue :: dequeue(){
-    int x=front->info;
-    if(rear==front){
-        delete front;
-        rear=front=0;
-    }
-    else{
-        Qnode *temp;
-        temp=front;
-        front=front->next;
-        delete temp;
-    }
-    return x;
+
+void Graph::BFS(int s){
+	vector<bool> visited;
+	visited.resize(V, false);
+	list<int> queue;
+
+	visited[s] = true;
+	queue.push_back(s);
+
+	while(!queue.empty()){
+		s=queue.front();
+		cout << s << " ";
+		queue.pop_front();
+		for (auto adjacent : adj[s]) {
+			if (!visited[adjacent]) {
+				visited[adjacent] = true;
+				queue.push_back(adjacent);
+			}
+		}
+	}
 }
-class Graph{
-    int v;
-    int V[10];
-    int M[20][20];
-    public:
-    void input();
-    void breadthFirst(int);
-};
-void Graph :: input(){
-    cout<<"Enter the number of vertices in the graph"<<endl;
-    cin>>v;
-    cout<<"Enter the vertex in the graph"<<endl;
-    for(int i=0;i<v;i++){
-        cin>>V[i];
-    }
-    cout<<"Press 1 if a edge is present else zero"<<endl;
-    for(int i=0;i<v;i++){
-        for(int j=0;j<v;j++){
-            cout<<"IS THERE A EDGE BETWEEN "<<V[i]<<","<<V[j]<<" IN THE GRAPH?"<<endl;
-            cin>>M[i][j];
-        }
-    }
-}
-void Graph :: breadthFirst(int x){
-    bool visited[v];
-    for(int i=0;i<v;i++){
-        visited[i]=false;
-    }
-    Queue q;
-    q.enqueue(x);
-    while(!q.isempty()){
-        int s=q.dequeue();
-        if(!visited[s]){
-            visited[s]=true;
-            cout<<V[s]<<" ";
-            for(int i=0;i<v;i++){
-                if(M[s][i]>0 && !visited[i])
-                    q.enqueue(i);
-            }
-        }
-    }
-}
-int main()
-{
-Graph g;
-int start;
-g.input();
-cout<<"Enter the index of source vertex: ";
-cin>>start;
-cout<<"Breadth First Traversal for the Graph : ";
-g.breadthFirst(start);
-return 0;
+
+int main(){
+	Graph g(4);
+	g.addEdge(0, 1);
+	g.addEdge(0, 2);
+	g.addEdge(1, 2);
+	g.addEdge(2, 0);
+	g.addEdge(2, 3);
+	g.addEdge(3, 3);
+
+	cout << "Following is Breadth First Traversal "
+		<< "(starting from vertex 2) \n";
+	g.BFS(2);
+
+	return 0;
 }
