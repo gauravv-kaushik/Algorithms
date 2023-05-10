@@ -12,7 +12,7 @@ int getMax(int a[], int n) {
 }  
   
 void countingSort(int a[], int n, int place){  
-    int output[n + 1];  
+    int output[n];  
     int count[10] = {0};    
   
     // Calculate count of elements  
@@ -24,11 +24,9 @@ void countingSort(int a[], int n, int place){
         count[i] += count[i - 1];  
   
   // Place the elements in sorted order  
-    for (int i = n - 1; i >= 0; i--) {  
-        output[count[(a[i] / place) % 10] - 1] = a[i];  
-        count[(a[i] / place) % 10]--;  
-    }  
-  
+    for (int i = n-1; i >= 0; i--) {  
+        output[--count[(a[i] / place) % 10]] = a[i];
+    } 
     for (int i = 0; i < n; i++)  
         a[i] = output[i];  
 }  
